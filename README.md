@@ -11,10 +11,11 @@ Based originally on [CRT-C® – Crosspoint RESPONSIVE Touchscreen-Control](http
 
 ## What it does
 
-This is a different approach and it is a **dynamic** controller for Extron Crosspoint.
+This is a different approach to the original CRT-C Controller and it is a **dynamic** controller for Extron Crosspoint.
 Instead of pre-programming routes on the Extron unit itself, **you send ties (inputs & output combinations) on the fly — select an input, pick one or more outputs, and hit Submit**
 
-Otherwise it works the same as the original design.
+**Otherwise it works the same as the original design.**
+
 --- 
 
 ## Setup
