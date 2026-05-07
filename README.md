@@ -14,11 +14,14 @@ Otherwise it works the same as the original design.
 
 ## Setup
 
-The initial setup process is the same as described in the original forum post — but importantly, **you do not need to buy a serial-to-USB cable**. I won't go into too much detail but you can most likely do the following instead:
+**The initial setup process is the same as described in the original forum post** — but importantly, **you do not need to buy a serial-to-USB cable**. I won't go into too much detail but you can most likely do the following instead:
 
 1. Temporarily change your PC's subnet to match the Extron's default IP range
 2. Access the Extron's web interface and change its IP address to one on your normal home network range
 3. From that point on, you can reach the Extron directly from your browser on your regular network
+
+More details:
+[CrossPoint 450 Plus / MAV Plus Setup Guide](https://media.extron.com/public/download/files/userman/XP_450_64_SUG_A.pdf) Page 4-10
 
 ---
 ## Configuring for your system
@@ -115,4 +118,4 @@ The current implementation assumes all inputs carry both a video and audio signa
 
 ## Notes
 
-- The CSS styling for this project was made with the assistance of AI.
+- The CSS styling for this project and part of the README were made with the assistance of AI.
