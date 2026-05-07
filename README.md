@@ -10,42 +10,7 @@ This is a different approach and it is a **dynamic** controller for Extron Cross
 Instead of pre-programming routes on the Extron unit itself, **you send ties (inputs & output combinations) on the fly â€” select an input, pick one or more outputs, and hit Submit**
 
 Otherwise it works the same as the original design.
-
----
-
-## How the ties work
-
-Extron Crosspoint units accept routing commands over HTTP using a specific string syntax. This page constructs those commands using three symbols to specify what type of signal is being tied:
-
-| Symbol | Meaning |
-|--------|---------|
-| `%`    | Video only |
-| `$`    | Audio only |
-| `!`    | Both video and audio |
-
-A full command looks like this:
-
-```
-W+Q{input}*{output}{symbol}
-```
-
-For example, routing input 3 to output 2 (video only):
-
-```
-W+Q3*2%
-```
-
-Multiple ties can be chained in a single command. The page URL-encodes this string and sends it to the Extron via a GET request:
-
-```
-control-dynamic.html?cmd=W%2BQ3*2%25
-```
-
-When **Clear All Previous** is enabled, the command first sends `0*1!` through `0*{MAX_OUTPUTS}!` to clear every output before applying your new routing. This was a hack that I found, but if anyone knows of a better way feel free to send a PR!
-
-The command syntax is based on Extron's SIS (Simple Instruction Set) protocol. For full details on remote control commands and network communication, see **Chapter 4 (Remote Control)** of the [CrossPoint 450 Plus / MAV Plus Setup Guide](https://media.extron.com/public/download/files/userman/XP_450_64_SUG_A.pdf)
-
----
+--- 
 
 ## Setup
 
@@ -58,7 +23,6 @@ The initial setup process is the same as described in the original forum post â€
 Once the Extron is on your network, drop `control-dynamic.html` into any location your browser can open it from (local file, NAS, simple HTTP server, etc.) and you're good to go.
 
 ---
-
 ## Configuring for your system
 
 There are three things to update in the `<script>` block at the top of `control-dynamic.html`:
@@ -104,6 +68,38 @@ Set this to the total number of physical outputs on your Extron unit. This is on
 ```javascript
 const MAX_OUTPUTS = 8;
 ```
+
+## How the ties work
+
+Extron Crosspoint units accept routing commands over HTTP using a specific string syntax. This page constructs those commands using three symbols to specify what type of signal is being tied:
+
+| Symbol | Meaning |
+|--------|---------|
+| `%`    | Video only |
+| `$`    | Audio only |
+| `!`    | Both video and audio |
+
+A full command looks like this:
+
+```
+W+Q{input}*{output}{symbol}
+```
+
+For example, routing input 3 to output 2 (video only):
+
+```
+W+Q3*2%
+```
+
+Multiple ties can be chained in a single command. The page URL-encodes this string and sends it to the Extron via a GET request:
+
+```
+control-dynamic.html?cmd=W%2BQ3*2%25
+```
+
+When **Clear All Previous** is enabled, the command first sends `0*1!` through `0*{MAX_OUTPUTS}!` to clear every output before applying your new routing. This was a hack that I found, but if anyone knows of a better way feel free to send a PR!
+
+The command syntax is based on Extron's SIS (Simple Instruction Set) protocol. For full details on remote control commands and network communication, see **Chapter 4 (Remote Control)** of the [CrossPoint 450 Plus / MAV Plus Setup Guide](https://media.extron.com/public/download/files/userman/XP_450_64_SUG_A.pdf)
 
 ---
 
