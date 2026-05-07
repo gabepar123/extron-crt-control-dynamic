@@ -1,16 +1,15 @@
 # CRT-Control Dynamic
 
-Originally on [CRT-C® – Crosspoint RESPONSIVE Touchscreen-Control](https://shmups.system11.org/viewtopic.php?f=6&t=69630) which allows you to quickly configure presets.
+Based originally on [CRT-C® – Crosspoint RESPONSIVE Touchscreen-Control](https://shmups.system11.org/viewtopic.php?f=6&t=69630) which allows you to quickly configure presets.
 
-----------
-
-This is a different appraoch and it a dynamic controller for Extron Crosspoint. Instead of pre-programming routes on the Extron unit itself, **you send ties (inputs & output combinations) on the fly — select an input, pick one or more outputs, and hit Submit**
+---
 
 ## What it does
 
-- Dynamically generates Extron tie commands and sends them via HTTP to your Extron unit
-- Supports routing video and/or audio independently to multiple outputs at once
-- Includes a **Clear All Previous** toggle that wipes all existing ties before applying new ones — useful when switching games/consoles entirely
+This is a different approach and it is a **dynamic** controller for Extron Crosspoint.
+Instead of pre-programming routes on the Extron unit itself, **you send ties (inputs & output combinations) on the fly — select an input, pick one or more outputs, and hit Submit**
+
+Otherwise it works the same as the original design.
 
 ---
 
@@ -43,6 +42,8 @@ control-dynamic.html?cmd=W%2BQ3*2%25
 ```
 
 When **Clear All Previous** is enabled, the command first sends `0*1!` through `0*{MAX_OUTPUTS}!` to clear every output before applying your new routing. This was a hack that I found, but if anyone knows of a better way feel free to send a PR!
+
+The command syntax is based on Extron's SIS (Simple Instruction Set) protocol. For full details on remote control commands and network communication, refer to **Chapter 4 (Remote Control)** of the [CrossPoint 450 Plus / MAV Plus Setup Guide](https://media.extron.com/public/download/files/userman/XP_450_64_SUG_A.pdf), which covers SIS commands, establishing Ethernet connections, connection timeouts, verbose mode, and accessing the unit's built-in HTML pages.
 
 ---
 
@@ -110,5 +111,14 @@ const MAX_OUTPUTS = 8;
 
 Place any images you want to use for inputs/outputs into the `images-png/` folder alongside `control-dynamic.html`.
 
-Limitations / Not yet supported
+---
+
+## Limitations / Not yet supported
+
 The current implementation assumes all inputs carry both a video and audio signal (e.g. game consoles). Inputs that only use one signal type — like a CD player (audio only) — are not explicitly supported and would require some tweaks to handle correctly. If you have a need for this and want to contribute, feel free to raise a PR.
+
+---
+
+## Notes
+
+- The CSS styling for this project was made with the assistance of AI.
