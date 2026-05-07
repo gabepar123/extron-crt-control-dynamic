@@ -20,7 +20,7 @@ Instead of pre-programming routes on the Extron unit itself, **you send ties (in
 
 ## Setup
 
-**The initial setup process is the same as described in the original forum post** — but importantly, **you do not need to buy a serial-to-USB cable**. I won't go into too much detail but you can most likely do the following instead:
+**The initial setup process is the same as described in the original forum post** — but importantly, **you do not need to buy a serial-to-USB cable or download any Extron software**. I won't go into too much detail but you can most likely do the following instead:
 
 1. Temporarily change your PC's subnet to match the Extron's default IP range
 2. Access the Extron's web interface and change its IP address to one on your normal home network range
