@@ -20,8 +20,6 @@ The initial setup process is the same as described in the original forum post â€
 2. Access the Extron's web interface and change its IP address to one on your normal home network range
 3. From that point on, you can reach the Extron directly from your browser on your regular network
 
-Once the Extron is on your network, drop `control-dynamic.html` into any location your browser can open it from (local file, NAS, simple HTTP server, etc.) and you're good to go.
-
 ---
 ## Configuring for your system
 
