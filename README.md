@@ -43,7 +43,7 @@ control-dynamic.html?cmd=W%2BQ3*2%25
 
 When **Clear All Previous** is enabled, the command first sends `0*1!` through `0*{MAX_OUTPUTS}!` to clear every output before applying your new routing. This was a hack that I found, but if anyone knows of a better way feel free to send a PR!
 
-The command syntax is based on Extron's SIS (Simple Instruction Set) protocol. For full details on remote control commands and network communication, refer to **Chapter 4 (Remote Control)** of the [CrossPoint 450 Plus / MAV Plus Setup Guide](https://media.extron.com/public/download/files/userman/XP_450_64_SUG_A.pdf), which covers SIS commands, establishing Ethernet connections, connection timeouts, verbose mode, and accessing the unit's built-in HTML pages.
+The command syntax is based on Extron's SIS (Simple Instruction Set) protocol. For full details on remote control commands and network communication, see **Chapter 4 (Remote Control)** of the [CrossPoint 450 Plus / MAV Plus Setup Guide](https://media.extron.com/public/download/files/userman/XP_450_64_SUG_A.pdf)
 
 ---
 
