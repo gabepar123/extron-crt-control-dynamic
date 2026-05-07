@@ -2,6 +2,11 @@
 
 Based originally on [CRT-C® – Crosspoint RESPONSIVE Touchscreen-Control](https://shmups.system11.org/viewtopic.php?f=6&t=69630) which allows you to quickly configure presets.
 
+
+<img width="2553" height="721" alt="ss_output" src="https://github.com/user-attachments/assets/bf38ee38-527b-4289-8ae0-c2b15199eb26" />
+---
+<img width="2551" height="1003" alt="ss_input" src="https://github.com/user-attachments/assets/318342b6-cf28-45bb-b4d7-f1ab271de8ba" />
+
 ---
 
 ## What it does
