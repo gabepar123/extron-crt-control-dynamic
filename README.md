@@ -32,7 +32,7 @@ More details:
 ---
 ## Configuring for your system
 
-There are three things to update in the `<script>` block at the top of `control-dynamic.html`:
+There are three things to update in the `<script>` block at the top of `control-dynamic.html` or `control-dynamic-dark.html` (Dark mode):
 
 ### 1. `inputTypes`
 
@@ -75,6 +75,8 @@ Set this to the total number of physical outputs on your Extron unit. This is on
 ```javascript
 const MAX_OUTPUTS = 8;
 ```
+
+Then just upload to your Extron!
 
 ## How the ties work
 
