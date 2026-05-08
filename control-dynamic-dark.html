@@ -1,0 +1,300 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>Extron CRT-Control</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+    <script>
+      function resetHeight() {
+        setTimeout(() => {
+          document.body.style.height = window.innerHeight + "px";
+        }, 500);
+      }
+      window.addEventListener("resize", resetHeight);
+      window.addEventListener("orientationchange", resetHeight);
+      if (screen.orientation) {
+        screen.orientation.addEventListener("change", resetHeight);
+      }
+      resetHeight();
+
+      let selectedInput = null;
+      let selectedOutputs = [];
+      let clearAllActive = false;
+
+      // --- Constants for output type symbols ---
+      const VIDEO_SYMBOL = "%";
+      const AUDIO_SYMBOL = "$";
+      const BOTH_SYMBOL  = "!";
+
+      const inputTypes = {
+        1: { name: "NES", image: "nes.png" },
+        2: { name: "SNES", image: "snes.png" },
+        3: { name: "N64", image: "n64.png" },
+        4: { name: "Gamecube", image: "gamecube.png" },
+        5: { name: "Wii", image: "wii.png" },
+        6: { name: "PS1", image: "ps1.png" },
+        7: { name: "PS2", image: "ps2.png" },
+        8: { name: "Xbox360", image: "xbox360.png" },
+      };
+
+      // --- Each entry can share outputButton for pairing audio/video ---
+      const outputTypes = {
+        1: { outputButton: 1, name: "CRT YPbPr", image: "crt_component.png", type: "video" },
+        2: { outputButton: 2, name: "CRT Composite", image: "crt_composite.png", type: "video" },
+        3: { outputButton: 3, name: "PVM YPbPr", image: "pvm_component.png", type: "video" },
+        4: { outputButton: 4, name: "PVM Composite", image: "pvm_composite.png", type: "video" },
+        5: { outputButton: 5, name: "Speakers", image: "speakers.jpg", type: "audio" },
+        6: { outputButton: 1, name: "CRT Audio", image: "crt_audio.png", type: "audio" },
+      };
+
+      const MAX_OUTPUTS = 8;
+
+      // --- Validation for duplicates in outputTypes ---
+      function validateOutputTypes() {
+        const seen = new Set();
+        const duplicates = [];
+
+        Object.entries(outputTypes).forEach(([index, data]) => {
+          const key = `${data.outputButton}-${data.type}`;
+          if (seen.has(key)) {
+            duplicates.push(`Duplicate ${data.type} for outputButton ${data.outputButton} (index ${index})`);
+          } else {
+            seen.add(key);
+          }
+        });
+
+        if (duplicates.length > 0) {
+          alert("Configuration error in outputTypes:\n" + duplicates.join("\n"));
+        }
+      }
+
+      function generateInputs() {
+        const grid = document.getElementById("input-grid");
+        grid.innerHTML = "";
+
+        Object.entries(inputTypes).forEach(([index, data]) => {
+          const flexItem = document.createElement("div");
+          flexItem.className = "flex-item";
+          flexItem.innerHTML = `
+            <div class="box" input-index="${index}" onclick="selectInput(${index})">
+              <img src="images-png/${data.image}" alt="${data.name}">
+            </div>
+          `;
+          grid.appendChild(flexItem);
+        });
+      }
+
+      function generateOutputs() {
+        const grid = document.getElementById("output-grid");
+        grid.innerHTML = "";
+
+        Object.entries(outputTypes).forEach(([index, data]) => {
+          const flexItem = document.createElement("div");
+          flexItem.className = "flex-item";
+          flexItem.innerHTML = `
+            <div class="box" output-index="${index}" onclick="selectOutput(${index})">
+              <img src="images-png/${data.image}" alt="${data.name}">
+            </div>
+          `;
+          grid.appendChild(flexItem);
+        });
+
+        // Validate once outputs are generated
+        validateOutputTypes();
+      }
+
+      function selectInput(index) {
+        selectedInput = index;
+        document.getElementById("input-container").style.display = "none";
+        document.getElementById("output-container").style.display = "flex";
+      }
+
+      function selectOutput(index) {
+        const box = document.querySelector(`[output-index="${index}"]`);
+        const alreadySelected = selectedOutputs.includes(index);
+
+              if (alreadySelected) {
+                selectedOutputs = selectedOutputs.filter(i => i !== index);
+                box.style.border = "none";
+              } else {
+                selectedOutputs.push(index);
+                const type = outputTypes[index].type;
+                let color = "#00b300";
+                if (type === "audio") color = "#b30000";
+                if (type === "both") color = "#b37400";
+                box.style.border = `5px solid ${color}`;
+              }
+            }
+
+      function toggleClearAll() {
+        const btn = document.getElementById("clearAllBtn");
+        clearAllActive = !clearAllActive;
+        btn.style.outline = clearAllActive ? "3px solid #00ff00" : "none";
+      }
+
+      function submitSelection() {
+        if (!selectedInput || selectedOutputs.length === 0) {
+          alert("Please select an input and at least one output.");
+          return;
+        }
+
+        const commandPrefix = "W+Q";
+        const delim = "|";
+        let cmd = commandPrefix;
+
+        if (clearAllActive) {
+          let clearString = "";
+          for (let i = 1; i <= MAX_OUTPUTS; i++) {
+            clearString += `0*${i}${BOTH_SYMBOL}`;
+          }
+          cmd += clearString;
+        }
+
+        selectedOutputs.forEach(output => {
+          const type = outputTypes[output].type;
+          let symbol;
+          if (type === "video") symbol = VIDEO_SYMBOL;
+          else if (type === "audio") symbol = AUDIO_SYMBOL;
+          else if (type === "both") symbol = BOTH_SYMBOL;
+          else {
+            alert(`Output ${outputTypes[output].name} does not have a valid type`);
+            return;
+          }
+
+          cmd += `${selectedInput}*${output}${symbol}`;
+        });
+
+        const encodedCmd = encodeURIComponent(cmd) + delim;
+        window.location.href = `control-dynamic-dark.html?cmd=${encodedCmd}`;
+      }
+
+      function goBack() {
+        window.location.href = `control-dynamic-dark.html`;
+      }
+
+      window.addEventListener("DOMContentLoaded", () => {
+        generateInputs();
+        generateOutputs();
+      });
+    </script>
+
+    <style>
+      * { box-sizing: border-box; }
+
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background: #585454;
+        padding: 7px;
+        font-family: Arial, sans-serif;
+      }
+
+      .flex-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        flex-wrap: nowrap;
+        width: 100%;
+        height: 100%;
+        background-color: #585454;
+      }
+
+      .container-header {
+        width: 100%;
+        text-align: center;
+        color: #d2d2d2;
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 0;
+        padding: 10px 0;
+      }
+
+      .button-row {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 10px;
+      }
+
+      .button-row button {
+        background-color: #9f9f9f;
+        color: #585454;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .button-row button:hover {
+        background-color: #9f9f9f;
+      }
+
+      .grid-area {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-content: flex-start;
+        width: 100%;
+        height: 100%;
+      }
+
+      .flex-item {
+        flex: 1 1 33%;
+        height: 25%;
+        padding: 5px;
+      }
+
+      .flex-item .box {
+        background-color: #9f9f9f;
+        height: 100%;
+        width: 100%;
+        position: relative;
+        cursor: pointer;
+      }
+
+      .box img {
+        max-height: 100%;
+        max-width: 100%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      @media (max-width: 800px) {
+        .flex-item {
+          flex: 1 1 33%;
+          height: 25%;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="flex-container" id="input-container">
+      <div class="container-header">Select Input</div>
+      <div class="grid-area" id="input-grid"></div>
+    </div>
+
+    <div class="flex-container" id="output-container" style="display: none;">
+      <div class="container-header">Select Outputs</div>
+
+      <div class="button-row">
+        <button onclick="goBack()">Back</button>
+        <button id="clearAllBtn" onclick="toggleClearAll()">Clear All Previous</button>
+        <button onclick="submitSelection()">Submit</button>
+      </div>
+
+      <div class="grid-area" id="output-grid"></div>
+    </div>
+  </body>
+</html>
